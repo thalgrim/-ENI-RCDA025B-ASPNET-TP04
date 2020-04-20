@@ -34,13 +34,13 @@ namespace TP04Module05.Controllers
         // GET: Pizza/Create
         public ActionResult Create()
         {
-            PizzaCreateViewModel vm = new PizzaCreateViewModel();
+            PizzaViewModel vm = new PizzaViewModel();
             return View(vm);
         }
 
         // POST: Pizza/Create
         [HttpPost]
-        public ActionResult Create(PizzaCreateViewModel vm)
+        public ActionResult Create(PizzaViewModel vm)
         {
             try
             {
@@ -62,7 +62,12 @@ namespace TP04Module05.Controllers
 
             if (pizza != null)
             {
-                return View(pizza);
+                PizzaViewModel vm = new PizzaViewModel();
+                 
+                vm.Pizza.Nom = pizza.Nom;
+                vm.Pizza.Pate = pizza.Pate;
+                vm.Pizza.Ingredients = pizza.Ingredients;
+                return View(vm);
             }
             else
             {
@@ -72,14 +77,14 @@ namespace TP04Module05.Controllers
 
         // POST: Pizza/Edit/5
         [HttpPost]
-        public ActionResult Edit(Pizza pizza)
+        public ActionResult Edit(int id, PizzaViewModel pizza)
         {
             try
             {
-                Pizza pizzaDb = FakeDbPizza.Instance.Pizzas.FirstOrDefault(p => p.Id == pizza.Id);
-                pizzaDb.Nom = pizza.Nom;
-                pizzaDb.Pate = pizza.Pate;
-                pizzaDb.Ingredients = pizza.Ingredients;
+                Pizza pizzaDb = FakeDbPizza.Instance.Pizzas.FirstOrDefault(p => p.Id == id);
+                pizzaDb.Nom = pizza.Pizza.Nom;
+                pizzaDb.Pate = pizza.Pizza.Pate;
+                pizzaDb.Ingredients = pizza.Pizza.Ingredients;
                 return RedirectToAction("Index");
             }
             catch

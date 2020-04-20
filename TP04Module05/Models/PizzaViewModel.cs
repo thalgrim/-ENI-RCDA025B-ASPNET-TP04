@@ -6,7 +6,7 @@ using System.Web;
 
 namespace TP04Module05.Models
 {
-    public class PizzaCreateViewModel
+    public class PizzaViewModel
     {
         public Pizza Pizza {get;set;}
         public List<Ingredient> Ingredients { get; } = Pizza.IngredientsDisponibles;
