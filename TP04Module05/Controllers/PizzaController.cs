@@ -42,12 +42,44 @@ namespace TP04Module05.Controllers
         [HttpPost]
         public ActionResult Create(PizzaViewModel vm)
         {
+            
             try
             {
-                
-                FakeDbPizza.Instance.Pizzas.Add(vm.Pizza);
+                if (ModelState.IsValid)
+                {
+                    if (FakeDbPizza.Instance.Pizzas.Any(p=>p.Nom.ToUpper()==vm.Pizza.Nom.ToUpper()))
+                    {
+                        ModelState.AddModelError("","Il existe déjà une pizza avec ce nom");
+                        return View();
+                    }
 
-                return RedirectToAction("Index");
+                    if (vm.Pizza.Ingredients.Count < 2 || vm.Pizza.Ingredients.Count > 5)
+                    {
+                        ModelState.AddModelError("", "Le nombre d'ingrédients doit être compris entre 2 et 5");
+                        return View();
+                    }
+
+                    bool ingredientExist=false;
+                    foreach (var pizza in FakeDbPizza.Instance.Pizzas)
+                    {
+                        if (pizza.Ingredients==vm.Pizza.Ingredients)
+                        {
+                            ingredientExist = true;
+                        }
+                    }
+
+                    if (ingredientExist)
+                    {
+                        ModelState.AddModelError("", "Une liste d'ingrédients identique éxiste déjà");
+                        return View();
+                    }
+
+                    FakeDbPizza.Instance.Pizzas.Add(vm.Pizza);
+
+                    return RedirectToAction("Index");
+                }
+                return View();
+
             }
             catch
             {
